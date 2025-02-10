@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Site{% endblock %}</title>
+    <!-- Подключение Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+   .scale {
+    transition: 0.6s; /* Время эффекта */
+   }
+   .scale:hover {
+    transform: scale(1.1); /* Увеличиваем масштаб */
+   }
+  </style>
+</head>
+<body class="bg-light">
+    <!-- Общий заголовок -->
+    <header class="bg-success text-white py-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1 class="h3 mb-0">
+                <a href="{% url 'index' %}" class="text-white text-decoration-none">
+                    Resume of Mikhail Ronchyk
+                </a>
+            </h1>
+            <div>
+                <!-- Кнопка возврата на главную -->
+                <a href="{% url 'index' %}" class="btn btn-outline-light btn-sm me-2">Home</a>
+                <!-- Кнопка возврата на главную -->
+                <a href="" class="btn btn-light btn-sm">More about me</a>
+                <!-- Кнопка перехода на тест -->
+                <a href="{% url 'test_yourself' %}" class="btn btn-dark btn-sm">Test Yourself</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="container mt-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Подключение Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
