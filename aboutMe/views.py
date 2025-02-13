@@ -15,3 +15,8 @@ def test_yourself(request):
     latest_question_list = Question.objects.all()
     context = {"latest_question_list": latest_question_list}
     return render(request, "aboutMe/test_yourself.html", context)
+
+
+def resume(request):
+    context = {}
+    return render(request, "aboutMe/resume.html", context)
