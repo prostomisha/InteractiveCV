@@ -1,35 +1,38 @@
 {% extends 'aboutMe/base.html' %}
+<!-- loading custom tags for showing the questions -->
+{% load test_tags %}
 
 {% block title %}Test Yourself{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Test Yourself</h1>
+    <h1 class="mb-4">Test Yourself</h1>
+    <!-- custom tag -->
+    {% latest_question_list1 as latest_question_list %}
+    {% if latest_question_list %}
+        <!-- Нумерованный список вопросов -->
+        <ol class="list-group list-group-numbered">
 
-{% if latest_question_list %}
-    <!-- Нумерованный список вопросов -->
-    <ol class="list-group list-group-numbered">
-        {% for question in latest_question_list %}
-            <li class="list-group-item">
-                <!-- Текст вопроса (без дублирования номера) -->
-                <span class="fw-bold">
+            {% for question in latest_question_list %}
+                <li class="list-group-item">
+                    <!-- Текст вопроса (без дублирования номера) -->
+                    <span class="fw-bold">
                     {{ question.question_text }}
                 </span>
 
-                <!-- Список вариантов с буквенной нумерацией -->
-                <ol type="A" class="ms-3">
-                    {% for choice in question.choice_set.all %}
+                    <!-- Список вариантов с буквенной нумерацией -->
+                    <ol type="A" class="ms-3">
+                        {% for choice in question.choice_set.all %}
 
-                        <li class="my-2">
-                            {{ choice.choice_text }}
-                            <!-- Если есть дополнительная информация -->
-                            <small class="text-muted">{{ choice.check_choice }}</small>
+                            <li class="my-2">
+                                {{ choice.choice_text }}
+                                <!-- Если есть дополнительная информация -->
+                                <small class="text-muted">{{ choice.check_choice }}</small>
 
-                        </li>
-                    {% endfor %}
-                </ol>
-            </li>
-        {% endfor %}
-    </ol>
-
-{% endif %}
+                            </li>
+                        {% endfor %}
+                    </ol>
+                </li>
+            {% endfor %}
+        </ol>
+    {% endif %}
 {% endblock %}

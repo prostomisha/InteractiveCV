@@ -1,0 +1,55 @@
+
+.resume-container {
+    max-width: 900px;
+
+    padding: 40px;
+    margin: auto;
+    display: flex;
+}
+
+.left-column {
+    width: 30%;
+    padding-right: 30px;
+    text-align: center;
+}
+
+.left-column img {
+    width: 100%;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.right-column {
+    width: 70%;
+}
+
+.section-title {
+    border-bottom: 2px solid black;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.scale {
+    transition: 0.6s; /* Время эффекта */
+}
+
+.scale:hover {
+    transform: scale(1.1); /* Увеличиваем масштаб */
+}
+
+h1 {
+    font-weight: bold;
+}
+
+hr {
+    border-top: 2px solid black;
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+ul {
+    padding-left: 20px;
+}
+

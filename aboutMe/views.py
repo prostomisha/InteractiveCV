@@ -12,9 +12,9 @@ def index(request):
 
 
 def test_yourself(request):
-    latest_question_list = Question.objects.all()
-    context = {"latest_question_list": latest_question_list}
-    return render(request, "aboutMe/test_yourself.html", context)
+    #latest_question_list = Question.objects.all()
+    #context = {"latest_question_list": latest_question_list}
+    return render(request, "aboutMe/test_yourself.html")
 
 
 def resume(request):
