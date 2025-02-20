@@ -35,4 +35,39 @@
             {% endfor %}
         </ol>
     {% endif %}
+    <br>
+    <!-- POST Simple HTML form -->
+    <form method="POST">
+        {% csrf_token %}
+        <ol class="list-group">
+            {% for question in latest_question_list %}
+                <li class="list-group-item">
+                    <div class="mb-4">
+                        <p><strong>{{ forloop.counter }}. {{ question.question_text }}</strong></p>
+                        <ol type="A" class="ms-3">
+                        {% for choice in question.choice_set.all %}
+                            <li class="my-2">
+                            <div class="d-flex align-items-center gap-7">
+                                <label class="form-check-label flex-grow-1">{{ choice.choice_text }} <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}"
+                                       class="form-check-input gx-4"></label>
+
+                            </div>
+                            </li>
+                        {% endfor %}
+                        </ol>
+                    </div>
+                </li>
+            {% endfor %}
+        </ol>
+            <button type="submit" class="btn btn-primary">See results</button>
+
+    </form>
+
+    {% if result %}
+    <div class="mt-4 alert alert-success">
+        {{ result }}
+    </div>
+    {% endif %}
+
+
 {% endblock %}
