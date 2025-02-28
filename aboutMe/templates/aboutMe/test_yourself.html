@@ -36,38 +36,93 @@
         </ol>
     {% endif %}
     <br>
-    <!-- POST Simple HTML form -->
-    <form method="POST">
-        {% csrf_token %}
-        <ol class="list-group">
-            {% for question in latest_question_list %}
-                <li class="list-group-item">
-                    <div class="mb-4">
-                        <p><strong>{{ forloop.counter }}. {{ question.question_text }}</strong></p>
-                        <ol type="A" class="ms-3">
-                        {% for choice in question.choice_set.all %}
-                            <li class="my-2">
-                            <div class="d-flex align-items-center gap-7">
-                                <label class="form-check-label flex-grow-1">{{ choice.choice_text }} <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}"
-                                       class="form-check-input gx-4"></label>
-
-                            </div>
-                            </li>
-                        {% endfor %}
-                        </ol>
-                    </div>
-                </li>
+    <!-- POST with AJAX -->
+    <form id="quiz-form">
+        {% for question in latest_question_list %}
+        <div class="mb-4 question-block" data-question-id="{{ question.id }}">
+            <p class="question-title"><strong>{{ forloop.counter }}. {{ question.question_text }}</strong></p>
+            {% for choice in question.shuffled_choices %}
+            <div class="form-check">
+                <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}" class="form-check-input">
+                <label class="form-check-label">{{ choice.choice_text }}</label>
+            </div>
             {% endfor %}
-        </ol>
-            <button type="submit" class="btn btn-primary">See results</button>
-
+        </div>
+        {% endfor %}
+        <button type="button" class="btn btn-primary" onclick="checkAnswers()">See results</button>
     </form>
 
-    {% if result %}
-    <div class="mt-4 alert alert-success">
-        {{ result }}
-    </div>
-    {% endif %}
+ <div id="result" class="mt-4"></div>
+
+
+<script>
+    function checkAnswers() {
+        let allAnswered = true;
+        let form = document.getElementById("quiz-form");
+        let resultDiv = document.getElementById("result");
+
+        // Сбрасываем подсветку перед новой проверкой
+        document.querySelectorAll(".form-check-label").forEach(label => {
+            label.classList.remove("text-danger", "fw-bold");
+        });
+
+        // Проверяем, все ли вопросы были отвечены
+        document.querySelectorAll(".question-block").forEach(questionBlock => {
+            let questionId = questionBlock.dataset.questionId;
+            let checked = questionBlock.querySelector(`input[name="question_${questionId}"]:checked`);
+
+            if (!checked) {
+                allAnswered = false;
+                // Подсвечиваем вопрос красным
+                questionBlock.querySelector(".question-title").classList.add("text-danger", "fw-bold");
+            } else {
+                questionBlock.querySelector(".question-title").classList.remove("text-danger", "fw-bold");
+            }
+        });
+
+        if (!allAnswered) {
+            resultDiv.innerHTML = `<div class="alert alert-danger">
+                Please, answer on all the questions!
+            </div>`;
+            return; // Прекращаем выполнение, если есть незаполненные вопросы
+        }
+
+        // Отправка формы на сервер
+        let formData = new FormData(form);
+
+        fetch("{% url 'check_answers' %}", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.correct_answers !== undefined) {
+                resultDiv.innerHTML = `<div class="alert alert-success">
+                    You answered correctly on ${data.correct_answers} out of ${data.all_questions} questions!
+                </div>`;
+
+                // Подсветка правильных и неправильных ответов
+                for (const [questionId, correctChoiceId] of Object.entries(data.correct_choices)) {
+                    const userChoiceId = data.user_answers[questionId];
+
+                    document.querySelectorAll(`input[name="question_${questionId}"]`).forEach(input => {
+                        let label = input.nextElementSibling; // Берем связанный <label>
+
+                        if (parseInt(input.value) === correctChoiceId) {
+                            label.classList.add("text-success", "fw-bold");
+                        } else if (parseInt(input.value) === userChoiceId) {
+                            label.classList.add("text-danger", "fw-bold");
+                        }
+                    });
+                }
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
+</script>
 
 
 {% endblock %}
