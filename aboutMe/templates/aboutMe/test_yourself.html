@@ -6,6 +6,10 @@
 
 {% block content %}
     <h1 class="mb-4">Test Yourself</h1>
+    <div>
+        <h2 class="mb-2">Suggest your own question</h2>
+        <a href="{% url 'create_question' %}"><button class="btn btn-info">Suggest</button></a>
+    </div>
     <!-- custom tag -->
     {% latest_question_list1 as latest_question_list %}
     {% if latest_question_list %}

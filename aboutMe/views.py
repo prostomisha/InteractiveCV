@@ -1,8 +1,10 @@
 from datetime import timezone
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from .models import Question, Choice
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from .forms import UserQuestionForm, UserChoiceForm
 
 
 def index(request):
@@ -53,3 +55,12 @@ def check_answers(request):
 def resume(request):
     context = {}
     return render(request, "aboutMe/resume.html", context)
+
+
+# class AddYourQuestion CLASS
+
+
+class CreateQuestionView(CreateView):
+    model = Question
+    form_class = UserQuestionForm
+    template_name = "aboutMe/create_question.html"
